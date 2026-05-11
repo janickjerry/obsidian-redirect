@@ -57,7 +57,7 @@
     
     if (isAndroid) {
       // Android 使用 intent:// 协议（Discord 内嵌浏览器支持）
-      openUrl = `intent://advanced-uri?vault=${encVault}&filename=${encFilename}#Intent;scheme=obsidian;package=com.obsidian.mobile;end`;
+      openUrl = `intent://advanced-uri?vault=${encVault}&filename=${encFilename}#Intent;scheme=obsidian;package=md.obsidian;end`;
       platformName = "Android (intent://)";
     } else {
       // iOS/Mac/其他使用 obsidian:// 协议
