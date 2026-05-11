@@ -19,6 +19,7 @@
     .btn-secondary { background: #0f3460; border: 1px solid #3b82f6; }
     .btn-secondary:hover { background: #1a4a7a; }
     .footer { margin-top: 24px; font-size: 12px; color: #475569; }
+    .status { margin-top: 12px; font-size: 13px; color: #94a3b8; }
   </style>
 </head>
 <body>
@@ -28,28 +29,67 @@
     <div class="info">
       <div class="info-row"><span class="info-label">Vault</span><span class="info-value" id="vaultDisplay">-</span></div>
       <div class="info-row"><span class="info-label">&#25991;&#20214;&#36335;&#24402;</span><span class="info-value" id="filenameDisplay">-</span></div>
+      <div class="info-row"><span class="info-label">&#24179;&#21488;</span><span class="info-value" id="platformDisplay">-</span></div>
     </div>
     <a id="openBtn" class="btn" href="#">&#28857;&#20987;&#25171;&#24320; Obsidian</a>
     <br>
-    <button class="btn btn-secondary" onclick="copyLink()">&#22797;&#21046; obsidian:// &#38142;&#25509;</button>
+    <button class="btn btn-secondary" onclick="copyLink()">&#22797;&#21046;&#38142;&#25509;</button>
+    <div class="status" id="statusText">&#27491;&#22312;&#33258;&#21160;&#36339;&#36716;...</div>
     <div class="footer">&#38656;&#35201; Obsidian + Advanced URI &#25554;&#20214;</div>
   </div>
   <script>
     const params = new URLSearchParams(location.search);
     const vault = params.get("vault") || "Obsidian";
     const filename = params.get("filename") || "";
-    const obsidianUrl = "obsidian://advanced-uri?vault=" + encodeURIComponent(vault) + "&filename=" + encodeURIComponent(filename);
+    
+    // 检测平台
+    const ua = navigator.userAgent;
+    const isAndroid = /Android/i.test(ua);
+    const isIOS = /iPhone|iPad|iPod/i.test(ua);
+    
+    // 编码参数
+    const encVault = encodeURIComponent(vault);
+    const encFilename = encodeURIComponent(filename);
+    
+    // 生成链接
+    let openUrl;
+    let platformName;
+    
+    if (isAndroid) {
+      // Android 使用 intent:// 协议（Discord 内嵌浏览器支持）
+      openUrl = `intent://advanced-uri?vault=${encVault}&filename=${encFilename}#Intent;scheme=obsidian;package=com.obsidian.mobile;end`;
+      platformName = "Android (intent://)";
+    } else {
+      // iOS/Mac/其他使用 obsidian:// 协议
+      openUrl = `obsidian://advanced-uri?vault=${encVault}&filename=${encFilename}`;
+      platformName = isIOS ? "iOS (obsidian://)" : "Desktop (obsidian://)";
+    }
+    
+    // 显示信息
     document.getElementById("vaultDisplay").textContent = vault;
     document.getElementById("filenameDisplay").textContent = filename;
-    document.getElementById("openBtn").href = obsidianUrl;
-    document.getElementById("openBtn").click();
+    document.getElementById("platformDisplay").textContent = platformName;
+    document.getElementById("openBtn").href = openUrl;
+    
+    // 自动跳转
+    window.location.href = openUrl;
+    
+    // 更新状态（如果还在页面上说明跳转失败）
+    setTimeout(function() {
+      document.getElementById("statusText").textContent = "&#33258;&#21160;&#36339;&#36716;&#21487;&#33021;&#34987;&#38450;&#27491;&#65292;&#35831;&#25163;&#21160;&#28857;&#20987;&#25353;&#38190;";
+    }, 1500);
+    
     function copyLink() {
-      navigator.clipboard.writeText(obsidianUrl).then(function() {
-        alert("&#38142;&#25509;&#24050;&#22797;&#21046;&#21040;&#21051;&#36148;&#26495;&#65292;&#35831;&#31896;&#36148;&#21040;&#27983;&#35270;&#22120;&#25171;&#24320;");
+      const textToCopy = isAndroid 
+        ? `intent://advanced-uri?vault=${encVault}&filename=${encFilename}#Intent;scheme=obsidian;package=com.obsidian.mobile;end`
+        : `obsidian://advanced-uri?vault=${encVault}&filename=${encFilename}`;
+      
+      navigator.clipboard.writeText(textToCopy).then(function() {
+        alert("&#38142;&#25509;&#24050;&#22797;&#21046;&#65292;&#21487;&#22312;&#27983;&#35270;&#22120;&#22320;&#22438;&#25171;&#24320;");
       }, function() {
-        prompt("&#22797;&#21046;&#22833;&#25928;&#65292;&#35831;&#25163;&#21160;&#22797;&#21046;&#65306;", obsidianUrl);
+        prompt("&#22797;&#21046;&#22833;&#25928;&#65292;&#35831;&#25163;&#21160;&#22797;&#21046;&#65306;", textToCopy);
       });
     }
-  <\/script>
+  </script>
 </body>
 </html>
