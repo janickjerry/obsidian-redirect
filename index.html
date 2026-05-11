@@ -81,7 +81,7 @@
     
     function copyLink() {
       const textToCopy = isAndroid 
-        ? `intent://advanced-uri?vault=${encVault}&filename=${encFilename}#Intent;scheme=obsidian;package=com.obsidian.mobile;end`
+        ? `intent://advanced-uri?vault=${encVault}&filename=${encFilename}#Intent;scheme=obsidian;package=md.obsidian;end`
         : `obsidian://advanced-uri?vault=${encVault}&filename=${encFilename}`;
       
       navigator.clipboard.writeText(textToCopy).then(function() {
