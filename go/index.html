@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Opening Obsidian...</title>
+</head>
+<body>
+  <p>Opening Obsidian...</p>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const filename = params.get("f") || "";
+    const vault = params.get("v") || "Obsidian";
+    const encF = encodeURIComponent(filename);
+    const encV = encodeURIComponent(vault);
+    const url = "obsidian://advanced-uri?vault=" + encV + "&filename=" + encF;
+    window.location.href = url;
+  </script>
+</body>
+</html>
