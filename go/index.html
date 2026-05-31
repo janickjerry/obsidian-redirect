@@ -12,7 +12,7 @@
     const vault = params.get("v") || "Obsidian";
     const encF = encodeURIComponent(filename);
     const encV = encodeURIComponent(vault);
-    const url = "obsidian://advanced-uri?vault=" + encV + "&filename=" + encF;
+    const url = "obsidian://open?vault=" + encV + "&file=" + encF;
     window.location.href = url;
   </script>
 </body>
